@@ -9,7 +9,7 @@
 body, html {
   height: 100%;
   width: 100%;
-  background-color: #000; /* Black background */
+  background-color: #000;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   justify-content: center;
@@ -24,7 +24,7 @@ body, html {
   padding: 20px;
   box-shadow: 0 0 20px #222;
   width: 100%;
-  max-width: 400px; /* max width */
+  max-width: 400px;
 }
 
 /* Display screen */
@@ -45,16 +45,17 @@ body, html {
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 60px);
   gap: 15px;
 }
 
 /* Ash color buttons */
 button {
-  background-color: #b2b2b2; /* ash gray */
+  background-color: #b2b2b2;
   color: #111;
   font-size: 1.3rem;
   border: none;
-  border-radius: 50%; /* circular */
+  border-radius: 50%;
   height: 60px;
   width: 60px;
   cursor: pointer;
@@ -62,14 +63,56 @@ button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Empty grid cell placeholders */
+.buttons > div {
+  /* No styling needed */
+}
+
+/* AC button at top-left */
 #clear {
+  grid-column: 1 / 2;
+  grid-row: 1;
   background-color: rgb(231, 47, 47);
   color: #fff;
 }
 
-#DEL {
+/* DEL button at top-right */
+#delete {
+  grid-column: 4 / 5;
+  grid-row: 1;
   background-color: rgb(238, 167, 36);
   color: #fff;
+}
+
+/* Operators stacked on rightmost column except divide */
+#multiply {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+#subtract {
+  grid-column: 4;
+  grid-row: 3;
+}
+
+#add {
+  grid-column: 4;
+  grid-row: 4;
+}
+
+/* Equals button bottom right */
+#equals {
+  grid-column: 4;
+  grid-row: 5;
+  background-color: #888;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Divide (/) button bottom row, column 3 */
+#divide {
+  grid-column: 3;
+  grid-row: 5;
 }
 
 /* Hover effect */
@@ -78,14 +121,9 @@ button:hover {
   transform: scale(1.1);
 }
 
-/* Special buttons (clear, delete, equals) */ #equals {
-  background-color: #888;
-  color: #fff;
-  font-weight: 600;
-}
-
+/* Special buttons hover */
 #clear:hover,
-#DEL:hover,
+#delete:hover,
 #equals:hover {
   background-color: #aaa;
 }
@@ -95,12 +133,12 @@ button:hover {
   .calculator {
     max-width: 100%;
   }
-  
+
   button {
     height: 50px;
     width: 50px;
     font-size: 1.1rem;
-    border-radius: 15px; /* less circular on small screens for easier tap */
+    border-radius: 15px;
   }
 
   .display {
