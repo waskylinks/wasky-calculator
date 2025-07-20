@@ -1,65 +1,53 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "./App";
 
-describe('Calculator App', () => {
-  test('renders display with initial 0', () => {
-    render(<App />);
-    const displayElement = screen.getByText("0");
-    expect(displayElement).toBeInTheDocument();
-  });
+test("renders display with initial 0", () => {
+  render(<App />);
+  // Use test ID for the display element
+  expect(screen.getByTestId("display")).toHaveTextContent("0");
+});
 
-  test('renders AC and DEL buttons', () => {
-    render(<App />);
-    expect(screen.getByRole('button', { name: /AC/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /DEL/i })).toBeInTheDocument();
-  });
+test("buttons are rendered and clickable", async () => {
+  render(<App />);
+  const user = userEvent.setup();
 
-  test('displays numbers when buttons are clicked', async () => {
-    render(<App />);
-    const user = userEvent.setup();
+  // Verify buttons exist
+  expect(screen.getByRole("button", { name: "AC" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "DEL" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "1" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "+" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "=" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: "1" }));
-    await user.click(screen.getByRole('button', { name: "2" }));
-    await user.click(screen.getByRole('button', { name: "3" }));
+  // Perform calculation
+  await user.click(screen.getByRole("button", { name: "1" }));
+  await user.click(screen.getByRole("button", { name: "+" }));
+  await user.click(screen.getByRole("button", { name: "1" }));
+  await user.click(screen.getByRole("button", { name: "=" }));
 
-    expect(screen.getByText("123")).toBeInTheDocument();
-  });
+  // Verify result in display
+  expect(screen.getByTestId("display")).toHaveTextContent("2");
+});
 
-  test('performs a calculation correctly', async () => {
-    render(<App />);
-    const user = userEvent.setup();
+test("AC clears the input", async () => {
+  render(<App />);
+  const user = userEvent.setup();
 
-    // Input: 2 + 3 =
-    await user.click(screen.getByRole('button', { name: "2" }));
-    await user.click(screen.getByRole('button', { name: "+" }));
-    await user.click(screen.getByRole('button', { name: "3" }));
-    await user.click(screen.getByRole('button', { name: "=" }));
+  await user.click(screen.getByRole("button", { name: "1" }));
+  expect(screen.getByTestId("display")).toHaveTextContent("1");
 
-    expect(screen.getByText("5")).toBeInTheDocument();
-  });
+  await user.click(screen.getByRole("button", { name: "AC" }));
+  expect(screen.getByTestId("display")).toHaveTextContent("0");
+});
 
-  test('clears input when AC clicked', async () => {
-    render(<App />);
-    const user = userEvent.setup();
+test("DEL deletes last character", async () => {
+  render(<App />);
+  const user = userEvent.setup();
 
-    await user.click(screen.getByRole('button', { name: "1" }));
-    await user.click(screen.getByRole('button', { name: "2" }));
-    expect(screen.getByText("12")).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "1" }));
+  await user.click(screen.getByRole("button", { name: "2" }));
+  expect(screen.getByTestId("display")).toHaveTextContent("12");
 
-    await user.click(screen.getByRole('button', { name: /AC/i }));
-    expect(screen.getByText("0")).toBeInTheDocument();
-  });
-
-  test('deletes last character when DEL clicked', async () => {
-    render(<App />);
-    const user = userEvent.setup();
-
-    await user.click(screen.getByRole('button', { name: "9" }));
-    await user.click(screen.getByRole('button', { name: "8" }));
-    expect(screen.getByText("98")).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /DEL/i }));
-    expect(screen.getByText("9")).toBeInTheDocument();
-  });
+  await user.click(screen.getByRole("button", { name: "DEL" }));
+  expect(screen.getByTestId("display")).toHaveTextContent("1");
 });

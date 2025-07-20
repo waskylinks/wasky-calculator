@@ -7,16 +7,15 @@ const App = () => {
 
   // Buttons array with empty strings for placeholders
   const buttons = [
-    "AC", "", "", "DEL",      // Row 1 (AC col1, DEL col4, cols 2 & 3 empty)
-    "7", "8", "9", "*",       // Row 2
-    "4", "5", "6", "-",       // Row 3
-    "1", "2", "3", "+",       // Row 4
-    "0", ".", "/", "=",       // Row 5
+    "AC", "", "", "DEL",
+    "7", "8", "9", "*",
+    "4", "5", "6", "-",
+    "1", "2", "3", "+",
+    "0", ".", "/", "=",
   ];
 
   const isOperator = (char) => /[+\-*/]/.test(char);
 
-  // Fixed unnecessary escapes in regex
   const handleClick = (value) => {
     if (value === "AC") {
       setInput("");
@@ -38,7 +37,6 @@ const App = () => {
     }
   };
 
-  // Memoized with useCallback to fix dependency warning
   const handleEvaluate = useCallback(() => {
     try {
       if (!input) return;
@@ -57,11 +55,13 @@ const App = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleEvaluate]);  // Fixed dependency array
+  }, [handleEvaluate]);
 
   return (
     <div className="calculator">
-      <div id="display" className="display">{input || "0"}</div>
+      <div id="display" className="display" data-testid="display">
+        {input || "0"}
+      </div>
       <div className="buttons">
         {buttons.map((btn, index) =>
           btn === "" ? (
@@ -75,7 +75,7 @@ const App = () => {
                   : btn === "AC"
                   ? "clear"
                   : btn === "DEL"
-                  ? "delete"  // FCC test expects 'delete'
+                  ? "delete"
                   : btn === "/"
                   ? "divide"
                   : btn === "*"
